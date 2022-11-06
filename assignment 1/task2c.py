@@ -5,7 +5,6 @@ from utils import read_im, save_im, normalize
 output_dir = pathlib.Path("image_solutions")
 output_dir.mkdir(exist_ok=True)
 
-
 im = read_im(pathlib.Path("images", "lake.jpg"))
 plt.imshow(im)
 
@@ -23,6 +22,17 @@ def convolve_im(im, kernel,
     """
     assert len(im.shape) == 3
 
+    padding = kernel.shape[0] // 2
+
+    new = np.zeros((im.shape[0] + 2 * padding, im.shape[1] + 2 * padding, 3))
+    new[padding:-padding, padding:-padding, :] = im
+
+    new_k = np.fliplr(np.flipud(kernel))
+
+    for y in range(im.shape[0]):
+        for x in range(im.shape[1]):
+            for c in range(im.shape[2]):
+                im[y, x, c] = (new_k * new[y:y + kernel.shape[0], x:x + kernel.shape[0], c]).sum()
     return im
 
 

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pathlib
+import numpy as np
 from utils import read_im, save_im
 output_dir = pathlib.Path("image_solutions")
 output_dir.mkdir(exist_ok=True)
@@ -19,12 +20,7 @@ def greyscale(im):
         im ([type]): [np.array of shape [H, W]]
     """
 
-    return im
-
-
-im_greyscale = greyscale(im)
-save_im(output_dir.joinpath("lake_greyscale.jpg"), im_greyscale, cmap="gray")
-plt.imshow(im_greyscale, cmap="gray")
+    return np.dot(im[..., :3], [0.212, 0.7152, 0.0722])
 
 
 def inverse(im):
@@ -37,4 +33,12 @@ def inverse(im):
         im ([type]): [np.array of shape [H, W]]
     """
     # YOUR CODE HERE
-    return im
+    return np.subtract(255.0, im)
+
+
+im_greyscale = greyscale(im)
+save_im(output_dir.joinpath("lake_greyscale.jpg"), im_greyscale, cmap="gray")
+plt.imshow(im_greyscale, cmap="gray")
+im_inverted = inverse(im_greyscale)
+save_im(output_dir.joinpath("lake_inverted.jpg"), im_inverted, cmap="gray")
+plt.imshow(im_inverted, cmap="gray")
