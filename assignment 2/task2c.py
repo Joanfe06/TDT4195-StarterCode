@@ -5,6 +5,7 @@ from PIL import Image
 import torchvision
 import torch
 import numpy as np
+import utils
 
 
 image = Image.open("images/zebra.jpg")
@@ -78,7 +79,13 @@ n = 1
 for i in indices:
     plt.subplot(2, num_filters, n)
     # Plot weight here
+    plt.imshow(torch_image_to_numpy(weight[i]))
     plt.subplot(2, num_filters, num_filters+n)
     # Plot activation here
+    plt.imshow(torch_image_to_numpy(activation[0][i]), cmap='gray')
     n += 1
+plt.tight_layout(pad=0.001)
+plt.savefig(utils.image_output_dir.joinpath("task2c_plot.png"))
+plt.show()
+
 ### END YOUR CODE HERE ###

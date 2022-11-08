@@ -12,7 +12,6 @@ def convolve_im(im: np.array,
 
         "verbose" can be used for turning on/off visualization
         convolution
-
     Args:
         im: np.array of shape [H, W]
         fft_kernel: np.array of shape [H, W] 
@@ -21,7 +20,10 @@ def convolve_im(im: np.array,
         im: np.array of shape [H, W]
     """
     # START YOUR CODE HERE ### (You can change anything inside this block)
-    conv_result = im
+    fft_im = np.fft.fft2(im)
+    fft_filtered = fft_im * fft_kernel
+    conv_result = np.fft.ifft2(fft_filtered).real
+
     if verbose:
         # Use plt.subplot to place two or more images beside eachother
         plt.figure(figsize=(20, 4))
@@ -30,15 +32,23 @@ def convolve_im(im: np.array,
         plt.imshow(im, cmap="gray")
         plt.subplot(1, 5, 2)
         # Visualize FFT
+        fft_im_vis = np.fft.fftshift(fft_im)
+        fft_im_vis = np.log(fft_im_vis + 1)
+        plt.imshow(fft_im_vis, cmap="gray")
         plt.subplot(1, 5, 3)
         # Visualize FFT kernel
+        fft_kernel_vis = np.fft.fftshift(fft_kernel)
+        fft_kernel_vis = np.log(fft_kernel_vis + 1)
+        plt.imshow(fft_kernel_vis, cmap="gray")
         plt.subplot(1, 5, 4)
         # Visualize filtered FFT image
+        fft_filtered_vis = np.fft.fftshift(fft_filtered)
+        fft_filtered_vis = np.log(fft_filtered_vis + 1)
+        plt.imshow(fft_filtered_vis, cmap="gray")
         plt.subplot(1, 5, 5)
         # Visualize filtered spatial image
         plt.imshow(conv_result, cmap="gray")
-
-    ### END YOUR CODE HERE ###
+    # END YOUR CODE HERE #
     return conv_result
 
 
