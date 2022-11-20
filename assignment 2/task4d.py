@@ -3,6 +3,8 @@ import skimage.io
 import skimage.transform
 import pathlib
 import numpy as np
+from skimage.transform import hough_line_peaks, hough_line
+
 import utils
 import matplotlib.pyplot as plt
 image_dir = pathlib.Path("images")
@@ -16,6 +18,12 @@ impaths = [
 ]
 
 
+def magnitude(fft_im):
+    real = fft_im.real
+    imag = fft_im.imag
+    return np.sqrt(real**2 + imag**2)
+
+
 def create_binary_image(im):
     """Creates a binary image from a greyscale image "im"
 
@@ -27,8 +35,11 @@ def create_binary_image(im):
     """
 
     # START YOUR CODE HERE ### (You can change anything inside this block)
-    binary_im = np.zeros_like(im, dtype=np.bool)
-    ### END YOUR CODE HERE ###
+    fft_im = np.fft.fft2(im)
+    fft_im = np.fft.fftshift(fft_im)
+    fft_im = np.log(magnitude(fft_im) + 1)
+    binary_im = np.array([y > 5.5 for y in [x for x in fft_im]])
+    # END YOUR CODE HERE #
     return binary_im
 
 
